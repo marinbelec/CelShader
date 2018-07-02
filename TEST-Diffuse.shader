@@ -1,10 +1,9 @@
-﻿Shader ".Test/Test"
+﻿Shader ".Test/Diffuse"
 {
 	Properties
 	{
 		_Color ("Main colour", Color) = (1,1,1,1)
 		_MainTex ("Main texture", 2D) = "white" {}
-		_UnlitStrength ("Unlit Strength", Range(0.0,1.0)) = 0.5
 	}
 	SubShader
 	{
@@ -32,7 +31,6 @@
 
 		fixed4 _Color;
 		sampler2D _MainTex;
-		float _UnlitStrength;
 		float4 _LightColor0;
 
 		v2f vert (appdata IN)
@@ -49,10 +47,9 @@
 			fixed4 texColor = tex2D(_MainTex, IN.texcoord);
 
 			float3 normalDirection = normalize(IN.normal);
-			float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);			
-
-			float3 diffuse = _LightColor0.rgb * max(_UnlitStrength, dot(normalDirection, lightDirection));
-
+			float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
+			float3 diffuse = _LightColor0.rgb * max(0.0, dot(normalDirection, lightDirection));
+			
 			return _Color * texColor * float4(diffuse, 1);
 		}
 
